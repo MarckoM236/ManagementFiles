@@ -13,7 +13,7 @@ class DocumentController extends Controller{
     }
 
     //initial load page
-    public function index($params=[],$data){
+    public function index($params,$data){
         $sql = "SELECT CONCAT(user.name,' ',user.last_name) as user_name, category.name as category_name, documents.id_document as document_id, documents.descripcion as description,documents.url as url
                 FROM documents 
                 LEFT JOIN users As user ON user.id_user = documents.id_user
@@ -25,16 +25,43 @@ class DocumentController extends Controller{
     }
 
     //load form 'create page'
-    public function create($params=[],$data){
+    public function create($params,$data){
         $categories = $this->modelCategory->getQuery(['id_category','name']);
         $this->render('Document'.DIRECTORY_SEPARATOR.'create',['categories'=>$categories]);
     }
 
     //get data by method post and  create register
-    public function store($params=[],$data){
-        $description = $_POST['description'];
-        $category = $_POST['category'];
-        $date = $_POST['date'];
+    public function store($params,$data){
+        //validate
+        $errors = [];
+        $old = [];
+        $old['description'] = $data['description'];
+        $old['category'] = $data['category'];
+        $old['date'] = $data['date'];
+        $old['file'] = $data['file'];
+
+        if (empty($data['description'])) {
+            $errors['description'] = 'The Description field is obligatory';
+        }
+        if (empty($data['category'])) {
+            $errors['category'] = 'The Category field is obligatory';
+        }
+        if (empty($data['date'])) {
+            $errors['date'] = 'The Date field is obligatory';
+        }
+        if (!isset($_FILES['file']) || $_FILES['file']['error'] == UPLOAD_ERR_NO_FILE) {
+            $errors['file'] = 'The File field is obligatory';  
+        }
+
+        if (!empty($errors)) {
+            $this->fielValidate('/create',$errors,$old);
+            return; // Detener la ejecución
+        }
+
+        //get data
+        $description = $data['description'];
+        $category = $data['category'];
+        $date = $data['date'];
         $evidence = "";
     
         if (isset($_FILES['file']) && $_FILES['file']['error'] == UPLOAD_ERR_OK) {
@@ -67,8 +94,43 @@ class DocumentController extends Controller{
 
     }
 
+    //update register
+    public function update($params,$data){
+        //validate
+        $errors = [];
+        $old = [];
+        print_r($data);
+
+        if (empty($_POST['description'])) {
+            $errors['description'] = 'The Description field is obligatory';
+        }
+        if (empty($_POST['category'])) {
+            $errors['category'] = 'The Category field is obligatory';
+        }
+        if (empty($_POST['date'])) {
+            $errors['date'] = 'The Date field is obligatory';
+        }
+        if (!isset($_FILES['file']) || $_FILES['file']['error'] == UPLOAD_ERR_NO_FILE) {
+            $errors['file'] = 'The File field is obligatory';  
+        }
+
+        /* if (!empty($errors)) {
+            $this->fielValidate('/edit',$errors,$old);
+            return; // Detener la ejecución
+        } */
+    }
+
+    //load form 'edit page'
+    public function edit($params,$data){
+        $categories = $this->modelCategory->getQuery(['id_category','name']);
+        $where = isset($params[0]) ? ['id_document'=>$params[0]] : [];
+        $document = $this->model->getQuery(['*'],$where);
+
+        $this->render('Document'.DIRECTORY_SEPARATOR.'edit',['categories'=>$categories,'document'=>$document]);
+    }
+
     //delete a register and file if exist by id
-    public function delete($params=[],$data){
+    public function delete($params,$data){
         $where = isset($params[0]) ? ['id_document'=>$params[0]] : [];
 
         if($this->model->getByParams($where)){

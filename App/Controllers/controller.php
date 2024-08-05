@@ -21,4 +21,19 @@ class Controller{
         }
     }
 
+    //redirect to url with validations fiels errors
+    function fielValidate($url,$errors,$olds) {
+        if (!headers_sent()) {
+            header("Location: $url");
+            foreach($errors as $key => $value){
+                $_SESSION[$key] = $value;
+            }
+                $_SESSION['olds'] = $olds;
+            exit(); 
+        } else {
+            echo "<script type='text/javascript'>window.location.href='$url';</script>";
+            exit();
+        }
+    }
+
 }

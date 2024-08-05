@@ -9,7 +9,7 @@ class Router{
 
     }
 
-    function router($url,$params=[],$method,$data=null){
+    function router($url,$params,$method,$data=null){
         if (array_key_exists($url, $this->route)){
             if($this->route[$url][0]==$method){
                 $parts = explode('@', $this->route[$url][1]);
@@ -22,7 +22,7 @@ class Router{
             }
         }
         else{
-            die("Pagina no encontrada");
+            die("404 Pagina no encontrada");
         }
         
         

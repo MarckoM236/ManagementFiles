@@ -5,7 +5,7 @@ $urlFull = $_SERVER['REQUEST_URI'];
 $urlComponents = explode('/', trim($urlFull, '/'));
 
 $url = '/' . (isset($urlComponents[0]) ? $urlComponents[0] : '');
-$params = array_slice($urlComponents, 1);
+$params = count(array_slice($urlComponents, 1)) > 0 ? array_slice($urlComponents, 1) : [] ;
 $method = $_SERVER['REQUEST_METHOD'];
 $data=null;
 if($method === 'POST'){
