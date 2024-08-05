@@ -22,7 +22,7 @@ class Controller{
     }
 
     //redirect to url with validations fiels errors
-    function fielValidate($url,$errors,$olds) {
+    function fieldValidate($url,$errors,$olds) {
         if (!headers_sent()) {
             header("Location: $url");
             foreach($errors as $key => $value){

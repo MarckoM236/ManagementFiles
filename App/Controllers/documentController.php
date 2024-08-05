@@ -54,11 +54,11 @@ class DocumentController extends Controller{
         }
 
         if (!empty($errors)) {
-            $this->fielValidate('/create',$errors,$old);
+            $this->fieldValidate('/create',$errors,$old);
             return; // Detener la ejecución
         }
 
-        //get data
+        //get data POST
         $description = $data['description'];
         $category = $data['category'];
         $date = $data['date'];
@@ -99,7 +99,6 @@ class DocumentController extends Controller{
         //validate
         $errors = [];
         $old = [];
-        print_r($data);
 
         if (empty($_POST['description'])) {
             $errors['description'] = 'The Description field is obligatory';
