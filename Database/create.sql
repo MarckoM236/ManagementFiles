@@ -19,8 +19,9 @@ CREATE TABLE documents (
     id_document INT AUTO_INCREMENT PRIMARY KEY,
     id_user INT,
     id_category INT,
-    descripcion TEXT,
+    description TEXT,
     url VARCHAR(255),
+    date DATETIME,
     FOREIGN KEY (id_user) REFERENCES users(id_user),
     FOREIGN KEY (id_category) REFERENCES categories(id_category)
 );

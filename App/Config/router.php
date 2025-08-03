@@ -9,7 +9,7 @@ class Router{
 
     }
 
-    function router($url,$params,$method,$data=null){
+    function router($url,$params,$method,$data=null,$files=null){
         if (array_key_exists($url, $this->route)){
             if($this->route[$url][0]==$method){
                 $parts = explode('@', $this->route[$url][1]);
@@ -20,7 +20,7 @@ class Router{
 
                 try {
                     $controller = new $className;
-                    $controller->{$method}($params, $data); 
+                    $controller->{$method}($params, $data, $files); 
                     
                 } catch (Throwable $e) {
                     die("Error al ejecutar el método: " . $e->getMessage());

@@ -15,7 +15,7 @@ class DocumentController extends Controller{
     //initial load page
     public function index($params,$data){
         
-        $sql = "SELECT CONCAT(user.name,' ',user.last_name) as user_name, category.name as category_name, documents.id_document as document_id, documents.descripcion as description,documents.url as url
+        $sql = "SELECT CONCAT(user.name,' ',user.last_name) as user_name, category.name as category_name, documents.id_document as document_id, documents.description as description,documents.url as url
                 FROM documents 
                 LEFT JOIN users As user ON user.id_user = documents.id_user
                 LEFT JOIN categories As category ON category.id_category = documents.id_category";
@@ -32,14 +32,14 @@ class DocumentController extends Controller{
     }
 
     //get data by method post and  create register
-    public function store($params,$data){
+    public function store($params,$data,$files){
         //validate
         $errors = [];
         $old = [];
         $old['description'] = $data['description'];
         $old['category'] = $data['category'];
         $old['date'] = $data['date'];
-        $old['file'] = $data['file'];
+        $old['file'] = $files['file'];
 
         if (empty($data['description'])) {
             $errors['description'] = 'The Description field is obligatory';
@@ -50,7 +50,7 @@ class DocumentController extends Controller{
         if (empty($data['date'])) {
             $errors['date'] = 'The Date field is obligatory';
         }
-        if (!isset($_FILES['file']) || $_FILES['file']['error'] == UPLOAD_ERR_NO_FILE) {
+        if (!isset($files['file']) || $files['file']['error'] == UPLOAD_ERR_NO_FILE) {
             $errors['file'] = 'The File field is obligatory';  
         }
 
@@ -65,28 +65,42 @@ class DocumentController extends Controller{
         $date = $data['date'];
         $evidence = "";
     
-        if (isset($_FILES['file']) && $_FILES['file']['error'] == UPLOAD_ERR_OK) {
-            $fileTmpPath = $_FILES['file']['tmp_name'];
-            $fileName = $_FILES['file']['name'];
-            $fileSize = $_FILES['file']['size'];
-            $fileType = $_FILES['file']['type'];
-            $fileNameCmps = explode(".", $fileName);
-            $fileExtension = strtolower(end($fileNameCmps));
-    
-            $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
-    
-            $uploadFileDir = BASE_PATH.'Public'.DIRECTORY_SEPARATOR.'Storage'.DIRECTORY_SEPARATOR;
-            $dest_path = $uploadFileDir . $newFileName;
-    
-            if(move_uploaded_file($fileTmpPath, $dest_path)) {
-                $evidence = $newFileName;
-            } else {
-                $message = 'There was some error moving the file to upload directory.';
-            }
-        } 
+        try {
+            if (isset($files) && $files['file']['error'] == UPLOAD_ERR_OK) {
+                $fileTmpPath = $files['file']['tmp_name'];
+                $fileName = $files['file']['name'];
+                $fileSize = $files['file']['size'];
+                $fileType = $files['file']['type'];
+                $fileNameCmps = explode(".", $fileName);
+                $fileExtension = strtolower(end($fileNameCmps));
+        
+                $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+        
+                $uploadFileDir = BASE_PATH.'Public'.DIRECTORY_SEPARATOR.'Storage'.DIRECTORY_SEPARATOR;
+                $dest_path = $uploadFileDir . $newFileName;
 
-        $values = ['id_category'=>$category,'description'=>$description,'url'=>$evidence,'date'=>$date];
-        $insert = $this->model->insert(['id_categoriy','description','url','date'],$values);
+                if (!is_dir($uploadFileDir)) {
+                    die("El directorio $uploadFileDir no existe");
+                }
+
+                if (!is_writable($uploadFileDir)) {
+                    die("El directorio $uploadFileDir no tiene permisos de escritura");
+                }
+
+        
+                if(move_uploaded_file($fileTmpPath, $dest_path)) {
+                    $evidence = $newFileName;
+                } else {
+                    //$message = 'There was some error moving the file to upload directory.';
+                    die("Error al mover el archivo desde $fileTmpPath hacia $dest_path");
+                }
+            } 
+
+            $values = ['id_category'=>$category,'description'=>$description,'url'=>$evidence,'date'=>$date];
+            $insert = $this->model->insert(['id_category','description','url','date'],$values);
+        } catch (\Throwable $th) {
+            die("Error al cargar el documento: " . $th->getMessage());
+        }
 
 
         //redirect to url whit message
@@ -96,28 +110,87 @@ class DocumentController extends Controller{
     }
 
     //update register
-    public function update($params,$data){
+    public function update($params,$data, $files){
+        $id_document = isset($params[0]) ? $params[0] : null;
         //validate
         $errors = [];
         $old = [];
 
-        if (empty($_POST['description'])) {
+        if (empty($data['description'])) {
             $errors['description'] = 'The Description field is obligatory';
         }
-        if (empty($_POST['category'])) {
+        if (empty($data['category'])) {
             $errors['category'] = 'The Category field is obligatory';
         }
-        if (empty($_POST['date'])) {
+        if (empty($data['date'])) {
             $errors['date'] = 'The Date field is obligatory';
         }
-        if (!isset($_FILES['file']) || $_FILES['file']['error'] == UPLOAD_ERR_NO_FILE) {
-            $errors['file'] = 'The File field is obligatory';  
+
+        //validate only not exits fiel old
+        if (!isset($data['file_exits']) && (!isset($files['file']) || $files['file']['error'] == UPLOAD_ERR_NO_FILE)) {
+                $errors['file'] = 'The File field is obligatory';  
         }
 
-        /* if (!empty($errors)) {
-            $this->fielValidate('/edit',$errors,$old);
+        if (!empty($errors)) {
+            $this->fieldValidate('/edit/'.$id_document,$errors,$old);
             return; // Detener la ejecución
-        } */
+        }
+
+        
+        //get data POST
+        $description = $data['description'];
+        $category = $data['category'];
+        $date = $data['date'];
+        $evidence = $data['file_exits'] ?? "";
+    
+        try {
+            if (isset($files) && $files['file']['error'] == UPLOAD_ERR_OK) {
+                $fileTmpPath = $files['file']['tmp_name'];
+                $fileName = $files['file']['name'];
+                $fileSize = $files['file']['size'];
+                $fileType = $files['file']['type'];
+                $fileNameCmps = explode(".", $fileName);
+                $fileExtension = strtolower(end($fileNameCmps));
+        
+                $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+        
+                $uploadFileDir = BASE_PATH.'Public'.DIRECTORY_SEPARATOR.'Storage'.DIRECTORY_SEPARATOR;
+                $dest_path = $uploadFileDir . $newFileName;
+
+                if (!is_dir($uploadFileDir)) {
+                    die("El directorio $uploadFileDir no existe");
+                }
+
+                if (!is_writable($uploadFileDir)) {
+                    die("El directorio $uploadFileDir no tiene permisos de escritura");
+                }
+
+        
+                if(move_uploaded_file($fileTmpPath, $dest_path)) {
+                    $evidence = $newFileName;
+
+                    //delete fiel old
+                    if(isset($data['file_exits'])){
+                        if(file_exists($uploadFileDir.$data['file_exits'])){
+                            unlink($uploadFileDir.$data['file_exits']);
+                        }
+                    }
+
+                } else {
+                    //$message = 'There was some error moving the file to upload directory.';
+                    die("Error al mover el archivo desde $fileTmpPath hacia $dest_path");
+                }
+            } 
+
+            $values = ['id_category'=>$category,'description'=>$description,'url'=>$evidence,'date'=>$date];
+
+            //function update of the model
+            //--
+            
+        } catch (\Throwable $th) {
+            die("Error al cargar el documento: " . $th->getMessage());
+        }
+        
     }
 
     //load form 'edit page'

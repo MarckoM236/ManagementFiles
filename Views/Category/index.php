@@ -13,25 +13,23 @@
 ?>
 
 <div class="container">
-    <h4>Todos los archivos</h4>
-    <a href="/create" class="btn btn-success">Load File</a>
+    <h4>Todas las categorias</h4>
+    <a href="/categoryCreate" class="btn btn-success">Nueva categoria</a>
     <table class="table table-bordered">
         <thead>
-            <th>User</th>
-            <th>Category</th>
+            <th>No</th>
+            <th>Nombre</th>
             <th>Description</th>
-            <th>url</th>
             <th>Actions</th>
         </thead>
         <tbody>
-            <?php if($result['state'] == 'true'){ ?>
-                <?php foreach($result['data'] as $item){ ?>
+            <?php if($categories['state'] == 'true'){ ?>
+                <?php foreach($categories['data'] as $key=>$item){ ?>
                     <tr>
-                        <td><?= $item['user_name'] ?></td>
-                        <td><?= $item['category_name'] ?></td>
+                        <td><?= ($key + 1) ?></td>
+                        <td><?= $item['name'] ?></td>
                         <td><?= $item['description'] ?></td>
-                        <td><a href="<?= '/Storage/'.$item['url'] ?>" target="_blank"><?= $item['url'] ?></a></td>
-                        <td><a href="/edit/<?= $item['document_id'] ?>" class="text-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a> <a href="/delete/<?= $item['document_id'] ?>" class="text-danger"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                        <td><a href="/categoryEdit/<?= $item['id_category'] ?>" class="text-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a> <a href="/categoryDelete/<?= $item['id_category'] ?>" class="text-danger"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                     </tr>
                 <?php } ?>
             <?php } else { ?>

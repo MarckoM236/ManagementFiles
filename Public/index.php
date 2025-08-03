@@ -7,10 +7,12 @@ $urlComponents = explode('/', trim($urlFull, '/'));
 $url = '/' . (isset($urlComponents[0]) ? $urlComponents[0] : '');
 $params = count(array_slice($urlComponents, 1)) > 0 ? array_slice($urlComponents, 1) : [] ;
 $method = $_SERVER['REQUEST_METHOD'];
-$data=null;
+$data = null;
+$files = null;
 if($method === 'POST'){
     $data = $_POST;
+    $files = $_FILES;
 }
 
 $router = new Router();
-$router->router($url, $params, $method, $data);
+$router->router($url, $params, $method, $data, $files);
