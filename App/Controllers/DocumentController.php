@@ -1,7 +1,7 @@
 <?php
-include_once('controller.php');
-include_once(MODEL_PATH.'document.php');
-include_once(MODEL_PATH.'category.php');
+include_once('Controller.php');
+include_once(MODEL_PATH.'Document.php');
+include_once(MODEL_PATH.'Category.php');
 
 class DocumentController extends Controller{
     private $model;
@@ -14,10 +14,11 @@ class DocumentController extends Controller{
 
     //initial load page
     public function index($params,$data){
+        
         $sql = "SELECT CONCAT(user.name,' ',user.last_name) as user_name, category.name as category_name, documents.id_document as document_id, documents.descripcion as description,documents.url as url
                 FROM documents 
                 LEFT JOIN users As user ON user.id_user = documents.id_user
-                LEFT JOIN categorias As category ON category.id_category = documents.id_categoria";
+                LEFT JOIN categories As category ON category.id_category = documents.id_category";
 
         $result = $this->model->customQuery($sql,[]);
 
@@ -85,7 +86,7 @@ class DocumentController extends Controller{
         } 
 
         $values = ['id_category'=>$category,'description'=>$description,'url'=>$evidence,'date'=>$date];
-        $insert = $this->model->insert(['id_categoria','descripcion','url','date'],$values);
+        $insert = $this->model->insert(['id_categoriy','description','url','date'],$values);
 
 
         //redirect to url whit message

@@ -10,11 +10,11 @@ class Conection{
         $this->host = 'localhost';
         $this->database = 'management';
         $this->user = 'root';
-        $this->password = '';
+        $this->password = 'Wod89261';
     }
 
     public function getConection(){
-        $conn = new mysqli('localhost', 'root', '', 'management');
+        $conn = new mysqli('localhost', 'root', 'Wod89261', 'management');
 
         // Verificar la conexión
         if ($conn->connect_error) {

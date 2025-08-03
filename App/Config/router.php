@@ -13,9 +13,18 @@ class Router{
         if (array_key_exists($url, $this->route)){
             if($this->route[$url][0]==$method){
                 $parts = explode('@', $this->route[$url][1]);
-                include_once(CONTROLLER_PATH.$parts[0].'.php');
-                $controller = new $parts[0];
-                $controller->{$parts[1]}($params,$data);//get function
+                $className = $parts[0];
+                $method = $parts[1];
+                $fileName = $className.'.php';
+                include_once(CONTROLLER_PATH.$fileName);
+
+                try {
+                    $controller = new $className;
+                    $controller->{$method}($params, $data); 
+                    
+                } catch (Throwable $e) {
+                    die("Error al ejecutar el método: " . $e->getMessage());
+                }
             }
             else{
                 die("Metodo incorrecto, envie la solicitud por " . $this->route[$url][0]);

@@ -1,5 +1,5 @@
 <?php
-include_once(BASE_PATH.'App\Config'.DIRECTORY_SEPARATOR.'conection.php');
+include_once(BASE_PATH.'App'.DIRECTORY_SEPARATOR.'Config'.DIRECTORY_SEPARATOR.'conection.php');
 
 class Model {
     private $con;
