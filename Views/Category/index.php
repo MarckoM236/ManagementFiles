@@ -13,12 +13,14 @@
 ?>
 
 <div class="container">
-    <h4>Todas las categorias</h4>
-    <a href="/categoryCreate" class="btn btn-success">Nueva categoria</a>
+    <h4>All categories</h4>
+    <div class="content-btn">
+        <a href="/categoryCreate" class="btn btn-success">New category</a>
+    </div>
     <table class="table table-bordered">
         <thead>
             <th>No</th>
-            <th>Nombre</th>
+            <th>Name</th>
             <th>Description</th>
             <th>Actions</th>
         </thead>

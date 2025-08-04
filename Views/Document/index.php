@@ -13,8 +13,11 @@
 ?>
 
 <div class="container">
-    <h4>Todos los archivos</h4>
-    <a href="/create" class="btn btn-success">Load File</a>
+    <h4>All Documents</h4>
+    <div class="content-btn">
+        <a href="/create" class="btn btn-success">Load File</a>
+    </div>
+    
     <table class="table table-bordered">
         <thead>
             <th>User</th>
