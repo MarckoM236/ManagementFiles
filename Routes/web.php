@@ -10,3 +10,6 @@ $routes['/delete'] = ['GET', 'DocumentController@delete'];
 $routes['/allCategories'] = ['GET', 'CategoryController@index'];
 $routes['/categoryCreate'] = ['GET', 'CategoryController@create'];
 $routes['/categoryStore'] = ['POST', 'CategoryController@store'];
+
+$routes['/register'] = ['GET', 'AuthController@register'];
+$routes['/registerStore'] = ['POST', 'AuthController@registerStore'];

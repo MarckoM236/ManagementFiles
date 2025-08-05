@@ -46,3 +46,12 @@ CREATE TABLE roles_permissions (
     FOREIGN KEY (id_role) REFERENCES roles(id_rol),
     FOREIGN KEY (id_permission) REFERENCES permissions(id_permission)
 );
+
+-- Crear la tabla roles_users
+CREATE TABLE roles_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_role INT, 
+    id_user INT,
+    FOREIGN KEY (id_role) REFERENCES roles(id_rol),
+    FOREIGN KEY (id_user) REFERENCES users(id_user)
+);
