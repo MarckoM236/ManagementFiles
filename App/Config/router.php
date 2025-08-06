@@ -1,5 +1,6 @@
 <?php
 include('app.php');
+
 class Router{
     public $route;
 
@@ -16,10 +17,45 @@ class Router{
                 $className = $parts[0];
                 $method = $parts[1];
                 $fileName = $className.'.php';
-                include_once(CONTROLLER_PATH.$fileName);
+                
+
+                // --- middlewares ---
+                if (isset($this->route[$url][2])) {
+                    $middlewares = $this->route[$url][2];
+                    if (!is_array($middlewares)) {
+                        $middlewares = [$middlewares]; 
+                    }
+
+                    foreach($middlewares as $middle){
+                        //first letter lower
+                        $middlewareClass = ucfirst(strtolower($middle));
+                        $middlewareFile = MIDDLEWARE_PATH.$middlewareClass.'.php';
+                        if (file_exists($middlewareFile)){
+                            include_once($middlewareFile);
+
+                            if (class_exists($middlewareClass)) {
+                                $mid = new $middlewareClass();
+                                $mid->validate();
+                            }
+                            else{
+                                die('Class '.$middlewareClass.' not found');
+                            }
+                        }
+                        else{
+                            die('File '.$middlewareFile.' not found');
+                        }
+                    }
+                }               
+                
+                if (file_exists(CONTROLLER_PATH.$fileName)){
+                    include_once(CONTROLLER_PATH.$fileName);
+                }
+                else{
+                    die('File '.$fileName.' not found');
+                }
 
                 try {
-                    $controller = new $className;
+                    $controller = new $className();
                     $controller->{$method}($params, $data, $files); 
                     
                 } catch (Throwable $e) {
@@ -35,5 +71,5 @@ class Router{
         }
         
         
-     }
+    }
 }

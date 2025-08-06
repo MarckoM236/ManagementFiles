@@ -27,6 +27,9 @@ class AuthController extends Controller{
         if (empty($data['last_name'])) {
             $errors['last_name'] = 'The user last name field is obligatory';
         }
+        if (empty($data['email'])) {
+            $errors['email'] = 'The user email field is obligatory';
+        }
         if (empty($data['password'])) {
             $errors['password'] = 'The user password field is obligatory';
         }
@@ -62,6 +65,66 @@ class AuthController extends Controller{
         
     }
 
-    public function login(){}
-    public function logout(){}
+     public function login(){
+        $this->render('Auth'.DIRECTORY_SEPARATOR.'login');
+    }
+    
+    public function postLogin($params, $data){
+        //validate
+        $errors = [];
+        $old = [];
+        $old['email'] = $data['email'];
+        $response = false;
+
+        if (empty($data['email'])) {
+            $errors['email'] = 'The user email field is obligatory';
+        }
+        if (empty($data['password'])) {
+            $errors['password'] = 'The user password field is obligatory';
+        }
+
+        if (!empty($errors)) {
+            $this->fieldValidate('/login',$errors,$old);
+            return; // Detener la ejecución
+        }
+
+        $where = ['email'=>[$data['email'],'string']];
+        $userData = $this->model->getQueryStatement(['name','last_name','password'],$where);
+
+        if($userData['state'] == 'true'){
+            if(password_verify($data['password'], $userData['data']['password'])){
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = $userData['id'];
+                $_SESSION['user_name'] = $userData['name'];
+                $_SESSION['loggedin'] = true;
+
+                $this->redirectTo('/','Welcome '. $userData['data']['name'] . ' ' . $userData['data']['last_name'],'success_message');
+            }
+            else{
+                $this->redirectTo('/login','User or password are incorrect. Please verify.','error_message');
+            }
+        }
+        else{
+            $this->redirectTo('/login','User or password are incorrect. Please verify.','error_message');
+        }
+
+        
+    }
+    public function logout(){
+        $_SESSION = [];
+
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+
+
+        session_destroy();
+
+
+        $this->redirectTo('/login', 'successfully logged out.', 'success_message');
+    }
 }

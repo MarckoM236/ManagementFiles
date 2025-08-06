@@ -1,15 +1,19 @@
 <?php
 
-$routes = ['/' => ['GET','DocumentController@index']];
-$routes['/create'] = ['GET', 'DocumentController@create'];
-$routes['/store'] = ['POST', 'DocumentController@store'];
-$routes['/edit'] = ['GET', 'DocumentController@edit'];
-$routes['/update'] = ['POST', 'DocumentController@update'];
-$routes['/delete'] = ['GET', 'DocumentController@delete'];
+$routes = ['/' => ['GET','HomeController@index']];
+$routes['/documents'] = ['GET','DocumentController@index','Auth'];
+$routes['/create'] = ['GET', 'DocumentController@create','Auth'];
+$routes['/store'] = ['POST', 'DocumentController@store','Auth'];
+$routes['/edit'] = ['GET', 'DocumentController@edit','Auth'];
+$routes['/update'] = ['POST', 'DocumentController@update','Auth'];
+$routes['/delete'] = ['GET', 'DocumentController@delete','Auth'];
 
-$routes['/allCategories'] = ['GET', 'CategoryController@index'];
-$routes['/categoryCreate'] = ['GET', 'CategoryController@create'];
-$routes['/categoryStore'] = ['POST', 'CategoryController@store'];
+$routes['/allCategories'] = ['GET', 'CategoryController@index','Auth'];
+$routes['/categoryCreate'] = ['GET', 'CategoryController@create','Auth'];
+$routes['/categoryStore'] = ['POST', 'CategoryController@store','Auth'];
 
-$routes['/register'] = ['GET', 'AuthController@register'];
-$routes['/registerStore'] = ['POST', 'AuthController@registerStore'];
+$routes['/register'] = ['GET', 'AuthController@register','Guest'];
+$routes['/registerStore'] = ['POST', 'AuthController@registerStore','Guest'];
+$routes['/login'] = ['GET', 'AuthController@login','Guest'];
+$routes['/postLogin'] = ['POST', 'AuthController@postLogin','Guest'];
+$routes['/logout'] = ['GET', 'AuthController@logout','Auth'];

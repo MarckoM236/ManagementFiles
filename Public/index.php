@@ -1,6 +1,8 @@
 <?php
 require '../App/Config/router.php';
 
+session_start();
+
 $urlFull = $_SERVER['REQUEST_URI'];
 $urlComponents = explode('/', trim($urlFull, '/'));
 

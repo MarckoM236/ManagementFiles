@@ -11,9 +11,15 @@ class Model {
     }
 
     //Get data of especific table
-    public function getQuery($fileds=[],$where=[]){
+    public function getQuery($fields=[],$where=[]){
+        //validate allowed fields
+        $validFields = array_intersect($fields, $this->allowedColumns);
+        if (empty($validFields)) {
+            return ['state' => 'false', "message" => "No valid fields requested."];
+        }
+        
         if($this->con['state'] == true){
-            $stringFields = implode(",",$fileds);
+            $stringFields = implode(",",$fields);
             $stringWhere = "";
 
             $sql = "SELECT $stringFields FROM $this->table";
@@ -103,11 +109,80 @@ class Model {
         }
     }
 
+    //query statement (for login)
+    public function getQueryStatement($fields,$where = []) {
+        if ($this->con['state'] !== true) {
+            return ['state' => 'false', "message" => $this->con['message']];
+        }
+
+        //validate allowed fields
+        $validFields = array_intersect($fields, $this->allowedColumns);
+        if (empty($validFields)) {
+            return ['state' => 'false', "message" => "No valid fields requested."];
+        }
+
+        $stringFields = implode(",",$validFields);
+        $stringWhere = "";
+        $types = "";
+        $whereFields = [];
+
+        $sql = "SELECT $stringFields FROM $this->table";
+
+        if(count($where) > 0){
+            $conditions = [];
+            foreach($where as $key => $value){
+                //if not secure ignore column
+                if (in_array($key, $this->allowedColumns)) {
+                    $conditions[] = "$key= ?";
+                    $types .= $value[1][0];
+                    $whereFields[] = $value[0];
+                }
+                else{
+                    continue;
+                }
+            }
+            $stringWhere = " WHERE " . implode(" AND ", $conditions);
+            $sql .= $stringWhere;
+        }
+
+        //prepare query
+        $stmt = $this->con['conection']->prepare($sql);
+
+        if ($stmt === false) {
+            //if exist sintax error
+            return ['state' => 'false', "message" => "Error al preparar la consulta."];
+        }
+
+        if (!empty($whereFields)) {
+            $stmt->bind_param($types, ...$whereFields);
+        }
+
+        //execute query
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        if ($result && $result->num_rows === 1) {
+            $userData = $result->fetch_assoc();
+            return ['state' => 'true', "data" => $userData];
+        } else {
+            return ['state' => 'false', "message" => "No results found"];
+        }
+
+        $stmt->close();
+    }
+
     //insert a new record
     public function insert($fields=[],$data=[]){
+
+        //validate allowed fields
+        $validFields = array_intersect($fields, $this->allowedColumns);
+        if (empty($validFields)) {
+            return ['state' => 'false', "message" => "No valid fields requested."];
+        }
         
         if($this->con['state'] == true){
-            $stringFields = implode(",",$fields);
+            $stringFields = implode(",",$validFields);
             $sql = "INSERT INTO $this->table ($stringFields) VALUES(";
             foreach($data as $value){
                 $escapedValue = $this->con['conection']->real_escape_string($value);
@@ -174,5 +249,11 @@ class Model {
     }
 
     //update record by id
-    public function update(){}
+    public function update(){
+        //validate allowed fields
+        $validFields = array_intersect($fields, $this->allowedColumns);
+        if (empty($validFields)) {
+            return ['state' => 'false', "message" => "No valid fields requested."];
+        }
+    }
 }

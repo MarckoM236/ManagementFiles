@@ -2,3 +2,15 @@
     padding: auto;
     margin-bottom: 15px;
 }
+
+/*Home page*/
+.content-home-background{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img{
+        width: 50%;
+    }
+}
