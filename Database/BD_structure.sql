@@ -13,7 +13,7 @@ CREATE TABLE categories (
     name VARCHAR(255) NOT NULL,
     description TEXT,
     id_user INT,
-    FOREIGN KEY (id_user) REFERENCES users(id_user),
+    FOREIGN KEY (id_user) REFERENCES users(id_user)
 );
 
 -- Crear la tabla documents
