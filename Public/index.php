@@ -1,7 +1,14 @@
 <?php
+//allow display errors
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
+
+//load composer autoload
 require __DIR__ . '/../vendor/autoload.php';
+
+//load dotenv
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); 
+$dotenv->load();
 
 use App\Config\Router;
 

@@ -7,15 +7,15 @@ class Conection{
     private $user;
     private $password;
 
-    public function __construc(){
-        $this->host = 'localhost';
-        $this->database = 'management';
-        $this->user = 'root';
-        $this->password = 'Wod89261';
+    public function __construct(){
+        $this->host = $_ENV['DB_HOST'];
+        $this->database = $_ENV['DB_NAME'];
+        $this->user = $_ENV['DB_USER'];
+        $this->password = $_ENV['DB_PASS'];
     }
 
     public function getConection(){
-        $conn = new \mysqli('localhost', 'root', 'Wod89261', 'management');
+        $conn = new \mysqli($this->host, $this->user, $this->password, $this->database);
 
         // Verificar la conexión
         if ($conn->connect_error) {
