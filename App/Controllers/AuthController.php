@@ -94,8 +94,8 @@ class AuthController extends Controller{
         if($userData['state'] == 'true'){
             if(password_verify($data['password'], $userData['data']['password'])){
                 session_regenerate_id(true);
-                $_SESSION['user_id'] = $userData['id'];
-                $_SESSION['user_name'] = $userData['name'];
+                $_SESSION['user_id'] = $userData['data']['id'];
+                $_SESSION['user_name'] = $userData['data']['name'] . ' ' . $userData['data']['last_name'];
                 $_SESSION['loggedin'] = true;
 
                 $this->redirectTo('/','Welcome '. $userData['data']['name'] . ' ' . $userData['data']['last_name'],'success_message');

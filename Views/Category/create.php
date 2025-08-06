@@ -11,8 +11,8 @@ unset($_SESSION['olds']);
 ?>
 
 
-<div class="container">
-    <h4>Crete category</h4>
+<div class="container content-category">
+    <h4>Create category</h4>
     
     <form method="POST" action="/categoryStore">
         <div class="mb-3">
@@ -38,8 +38,10 @@ unset($_SESSION['olds']);
            ?>
         </div>
         
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a href="/" class="btn btn-danger">Cancel</a>
+        <div class="content-btn-category">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="/" class="btn btn-danger">Cancel</a>
+        </div>
 
     </form>
 </div>

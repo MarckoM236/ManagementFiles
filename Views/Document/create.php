@@ -12,7 +12,7 @@ unset($_SESSION['olds']);
 ?>
 
 
-<div class="container">
+<div class="container content-load-documents">
     <h4>Upload Evidence</h4>
     
     <form method="POST" action="/store" enctype="multipart/form-data">
@@ -72,8 +72,10 @@ unset($_SESSION['olds']);
            ?>
         </div>
         
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a href="/" class="btn btn-danger">Cancel</a>
+        <div class="content-btn-documents">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="/documents" class="btn btn-danger">Cancel</a>
+        </div>
 
     </form>
 </div>

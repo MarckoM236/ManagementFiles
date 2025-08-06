@@ -1,7 +1,7 @@
 <?php 
 @session_start();
 include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');?>
-<div class="container">
+<div class="container content-load-documents">
     <h4>Edit Evidence</h4>
     
     <form method="POST" action="/update/<?=$document['state']==true ? $document['data'][0]['id_document'] : ''?>" enctype="multipart/form-data">
@@ -67,8 +67,10 @@ include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');?>
            ?>
         </div>
         
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a href="/" class="btn btn-danger">Cancel</a>
+        <div class="content-btn-documents">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="/documents" class="btn btn-danger">Cancel</a>
+        </div>
 
     </form>
 </div>

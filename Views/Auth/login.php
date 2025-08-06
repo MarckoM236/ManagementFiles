@@ -20,7 +20,7 @@ if (isset($_SESSION['success_message'])) {
 ?>
 
 
-<div class="container">
+<div class="container content-login">
     <h4>Login</h4>
     
     <form method="POST" action="/postLogin">
@@ -47,8 +47,16 @@ if (isset($_SESSION['success_message'])) {
            ?>
         </div>
         
-        <button type="submit" class="btn btn-primary">Login</button>
-        <a href="/" class="btn btn-danger">Cancel</a>
+        <div class="content-btn-login">
+            <button type="submit" class="btn btn-primary">Login</button>
+            <a href="/" class="btn btn-danger">Cancel</a>
+        </div>
+
+        <div class="content-link">
+            <span>Are you not registered?</span>
+            <a href="/register" class="btn btn-link">Register</a>
+        </div>
+        
 
     </form>
 </div>
