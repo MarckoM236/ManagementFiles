@@ -35,7 +35,7 @@
                     </tr>
                 <?php } ?>
             <?php } else { ?>
-                <td><?= $result['message'] ?></td>
+                <td><?= $categories['message'] ?></td>
             <?php } ?>
         </tbody>
     </table>
