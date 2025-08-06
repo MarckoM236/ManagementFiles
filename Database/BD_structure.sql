@@ -11,7 +11,9 @@ CREATE TABLE users (
 CREATE TABLE categories (
     id_category INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    description TEXT
+    description TEXT,
+    id_user INT,
+    FOREIGN KEY (id_user) REFERENCES users(id_user),
 );
 
 -- Crear la tabla documents

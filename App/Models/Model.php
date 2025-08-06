@@ -1,5 +1,7 @@
 <?php
-include_once(BASE_PATH.'App'.DIRECTORY_SEPARATOR.'Config'.DIRECTORY_SEPARATOR.'conection.php');
+namespace App\Models;
+
+use App\Config\Conection;
 
 class Model {
     private $con;

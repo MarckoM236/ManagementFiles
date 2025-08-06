@@ -1,5 +1,7 @@
 <?php
-include_once('Model.php');
+namespace App\Models;
+
+use App\Models\Model;
 
 class User extends Model{
     protected $table = "users";

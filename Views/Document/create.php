@@ -1,5 +1,4 @@
 <?php 
-@session_start();
 include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');
 
 //old values

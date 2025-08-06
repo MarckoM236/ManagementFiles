@@ -1,5 +1,7 @@
 <?php
-include_once('Controller.php');
+namespace App\Controllers;
+
+use App\Controllers\Controller;
 
 class HomeController extends Controller{
 

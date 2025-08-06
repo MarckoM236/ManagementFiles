@@ -20,7 +20,7 @@
       <li class="nav-item">
         <a class="nav-link" aria-current="page" href="/">Home</a>
       </li>
-      <?php if ((isset($_SESSION['loggedin']) || $_SESSION['loggedin'] === true)) { ?>
+      <?php if ((isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true)) { ?>
       <li class="nav-item">
         <a class="nav-link" aria-current="page" href="/documents">Documents</a>
       </li>

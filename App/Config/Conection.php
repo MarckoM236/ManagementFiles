@@ -1,4 +1,5 @@
 <?php
+namespace App\Config;
 
 class Conection{
     private $host;
@@ -14,7 +15,7 @@ class Conection{
     }
 
     public function getConection(){
-        $conn = new mysqli('localhost', 'root', 'Wod89261', 'management');
+        $conn = new \mysqli('localhost', 'root', 'Wod89261', 'management');
 
         // Verificar la conexión
         if ($conn->connect_error) {

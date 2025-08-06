@@ -1,5 +1,4 @@
 <?php 
-@session_start();
 include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');?>
 <div class="container content-load-documents">
     <h4>Edit Evidence</h4>

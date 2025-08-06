@@ -1,6 +1,8 @@
 <?php
-include_once('Controller.php');
-include_once(MODEL_PATH.'User.php');
+namespace App\Controllers;
+
+use App\Controllers\Controller;
+use App\Models\User;
 
 class AuthController extends Controller{
     private $model;

@@ -1,0 +1,17 @@
+{
+    "name": "marco/management-files",
+    "description": "management of files",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "App/"
+        }
+    },
+    "authors": [
+        {
+            "name": "marco",
+            "email": "marcko236@gmail.com"
+        }
+    ],
+    "require": {}
+}

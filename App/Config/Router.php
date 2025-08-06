@@ -1,5 +1,7 @@
 <?php
+namespace App\Config;
 include('app.php');
+
 
 class Router{
     public $route;
@@ -14,7 +16,7 @@ class Router{
         if (array_key_exists($url, $this->route)){
             if($this->route[$url][0]==$method){
                 $parts = explode('@', $this->route[$url][1]);
-                $className = $parts[0];
+                $className = 'App\\Controllers\\'.$parts[0];
                 $method = $parts[1];
                 $fileName = $className.'.php';
                 
@@ -28,32 +30,19 @@ class Router{
 
                     foreach($middlewares as $middle){
                         //first letter lower
-                        $middlewareClass = ucfirst(strtolower($middle));
-                        $middlewareFile = MIDDLEWARE_PATH.$middlewareClass.'.php';
-                        if (file_exists($middlewareFile)){
-                            include_once($middlewareFile);
+                        $middlewareClass = 'App\\Middlewares\\'.ucfirst(strtolower($middle));
 
-                            if (class_exists($middlewareClass)) {
-                                $mid = new $middlewareClass();
-                                $mid->validate();
-                            }
-                            else{
-                                die('Class '.$middlewareClass.' not found');
-                            }
+                        if (class_exists($middlewareClass)) {
+                            $mid = new $middlewareClass();
+                            $mid->validate();
                         }
                         else{
-                            die('File '.$middlewareFile.' not found');
+                            die('Class '.$middlewareClass.' not found');
                         }
+                        
                     }
                 }               
                 
-                if (file_exists(CONTROLLER_PATH.$fileName)){
-                    include_once(CONTROLLER_PATH.$fileName);
-                }
-                else{
-                    die('File '.$fileName.' not found');
-                }
-
                 try {
                     $controller = new $className();
                     $controller->{$method}($params, $data, $files); 

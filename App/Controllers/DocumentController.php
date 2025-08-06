@@ -1,7 +1,9 @@
 <?php
-include_once('Controller.php');
-include_once(MODEL_PATH.'Document.php');
-include_once(MODEL_PATH.'Category.php');
+namespace App\Controllers;
+
+use App\Controllers\Controller;
+use App\Models\Document;
+use App\Models\Category;
 
 class DocumentController extends Controller{
     private $model;
