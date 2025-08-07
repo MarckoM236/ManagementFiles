@@ -16,16 +16,31 @@ class DocumentController extends Controller{
 
     //initial load page
     public function index($params,$data){
-        
-        $sql = "SELECT CONCAT(user.name,' ',user.last_name) as user_name, category.name as category_name, documents.id_document as document_id, documents.description as description,documents.url as url
+        //validate if exists params form query documents
+        if(isset($params[0]) && isset($params[1]) && $params[0]==='doc'){
+
+            if(!is_numeric($params[1])){
+                $documents = ['state'=>false,'message'=>'Not found.'];
+                $this->render('Document'.DIRECTORY_SEPARATOR.'documents',["documents"=>$documents]);
+                return;
+            }
+            
+            $sql = "SELECT CONCAT(user.name,' ',user.last_name) as user_name, category.name as category_name, documents.id_document as document_id, documents.description as description,documents.url as url,documents.date as date
                 FROM documents 
                 LEFT JOIN users As user ON user.id_user = documents.id_user
                 LEFT JOIN categories As category ON category.id_category = documents.id_category";
 
-        $where = ['documents.id_user'=>$_SESSION['user_id']];
-        $result = $this->model->customQuery($sql,$where);
+            $whereDocuments = ['documents.id_user'=>$_SESSION['user_id'],'documents.id_category'=>$params[1]];
+            $documents = $this->model->customQuery($sql,$whereDocuments);
 
-        $this->render('Document'.DIRECTORY_SEPARATOR.'index',["result"=>$result]);
+            $this->render('Document'.DIRECTORY_SEPARATOR.'documents',["documents"=>$documents]);
+            return;
+        }
+
+        $whereCategories = ['id_user'=>$_SESSION['user_id']];
+        $categories = $this->modelCategory->getQuery(['id_category','name'],$whereCategories);
+
+        $this->render('Document'.DIRECTORY_SEPARATOR.'index',["categories"=>$categories]);
     }
 
     //load form 'create page'

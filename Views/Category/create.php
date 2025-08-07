@@ -40,7 +40,7 @@ unset($_SESSION['olds']);
         
         <div class="content-btn-category">
             <button type="submit" class="btn btn-primary">Save</button>
-            <a href="/" class="btn btn-danger">Cancel</a>
+            <a href="/categories" class="btn btn-danger">Cancel</a>
         </div>
 
     </form>

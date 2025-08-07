@@ -125,3 +125,55 @@
         }
     }
 }
+
+/*View documents*/
+.content-documents{
+    .head-repo-documents{
+        display: flex;
+        flex-direction: row;
+        justify-content:space-between ;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .body-repo-documents{
+        padding: 20px;
+        width: 100%;
+        border: 1px #E8E1E1 solid;
+        border-radius: 10px;
+        margin-block: 10px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        .folders{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 15px;
+        }
+
+        .files{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 15px;
+        }
+
+        
+    }
+    .none{
+        display:none;
+    }
+}
+
+#menu-file {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+
+  a{
+    text-decoration: none;
+  }
+}
