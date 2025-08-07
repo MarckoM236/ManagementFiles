@@ -12,7 +12,8 @@ class CategoryController extends Controller{
     }
 
     public function index(){
-        $categories = $this->model->getQuery(['*']);
+        $where = ['id_user'=>$_SESSION['user_id']];
+        $categories = $this->model->getQuery(['*'],$where);
         $this->render('Category'.DIRECTORY_SEPARATOR.'index',['categories'=>$categories]);
     }
 
@@ -45,9 +46,10 @@ class CategoryController extends Controller{
         //get data POST
         $description = $data['description'];
         $name = $data['name'];
+        $id_user = $_SESSION['user_id'];
 
-        $values = ['name'=>$name,'description'=>$description];
-        $insert = $this->model->insert(['name','description'],$values);
+        $values = ['name'=>$name,'description'=>$description,'id_user'=>$id_user];
+        $insert = $this->model->insert(['name','description','id_user'],$values);
 
 
         //redirect to url whit message

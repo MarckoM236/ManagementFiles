@@ -91,12 +91,12 @@ class AuthController extends Controller{
         }
 
         $where = ['email'=>[$data['email'],'string']];
-        $userData = $this->model->getQueryStatement(['name','last_name','password'],$where);
+        $userData = $this->model->getQueryStatement(['id_user','name','last_name','password'],$where);
 
         if($userData['state'] == 'true'){
             if(password_verify($data['password'], $userData['data']['password'])){
                 session_regenerate_id(true);
-                $_SESSION['user_id'] = $userData['data']['id'];
+                $_SESSION['user_id'] = $userData['data']['id_user'];
                 $_SESSION['user_name'] = $userData['data']['name'] . ' ' . $userData['data']['last_name'];
                 $_SESSION['loggedin'] = true;
 

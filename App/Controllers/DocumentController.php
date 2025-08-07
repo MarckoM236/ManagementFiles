@@ -22,14 +22,16 @@ class DocumentController extends Controller{
                 LEFT JOIN users As user ON user.id_user = documents.id_user
                 LEFT JOIN categories As category ON category.id_category = documents.id_category";
 
-        $result = $this->model->customQuery($sql,[]);
+        $where = ['documents.id_user'=>$_SESSION['user_id']];
+        $result = $this->model->customQuery($sql,$where);
 
         $this->render('Document'.DIRECTORY_SEPARATOR.'index',["result"=>$result]);
     }
 
     //load form 'create page'
     public function create($params,$data){
-        $categories = $this->modelCategory->getQuery(['id_category','name']);
+        $where = ['id_user'=>$_SESSION['user_id']];
+        $categories = $this->modelCategory->getQuery(['id_category','name'],$where);
         $this->render('Document'.DIRECTORY_SEPARATOR.'create',['categories'=>$categories]);
     }
 
@@ -65,6 +67,7 @@ class DocumentController extends Controller{
         $description = $data['description'];
         $category = $data['category'];
         $date = $data['date'];
+        $id_user = $_SESSION['user_id'];
         $evidence = "";
     
         try {
@@ -98,8 +101,8 @@ class DocumentController extends Controller{
                 }
             } 
 
-            $values = ['id_category'=>$category,'description'=>$description,'url'=>$evidence,'date'=>$date];
-            $insert = $this->model->insert(['id_category','description','url','date'],$values);
+            $values = ['id_category'=>$category,'description'=>$description,'url'=>$evidence,'date'=>$date,'id_user'=>$id_user];
+            $insert = $this->model->insert(['id_category','description','url','date','id_user'],$values);
         } catch (\Throwable $th) {
             die("Error al cargar el documento: " . $th->getMessage());
         }
@@ -107,7 +110,7 @@ class DocumentController extends Controller{
 
         //redirect to url whit message
         $typeMessage = $insert['state'] == 'true' ? 'success_message' : 'error_message';
-        $this->redirectTo('/',$insert['message'],$typeMessage);
+        $this->redirectTo('/documents',$insert['message'],$typeMessage);
 
     }
 
@@ -234,7 +237,7 @@ class DocumentController extends Controller{
 
         //redirect to url whit message
         $typeMessage = $result['state'] == 'true' ? 'success_message' : 'error_message';
-        $this->redirectTo('/',$result['message'],$typeMessage);
+        $this->redirectTo('/documents',$result['message'],$typeMessage);
         
     }
 }
