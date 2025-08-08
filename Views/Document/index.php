@@ -38,12 +38,28 @@
     </div>
 </div>
 
+<!-- modal edit-->
+<div class="modal fade" id="modal-edit-document" tabindex="-1" aria-labelledby="modal-edit-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-edit-label">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-edit-body" id="modal-edit-body">
+        ...
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
     $(document).ready(function(){
         let id_file = null;
+        let id_category = null;
         //open folder
         $('.folders').click(function(){
-            let id_category = $(this).data('id');
+            id_category = $(this).data('id');
             $('.body-repo-documents').html('');
             $('.content-btn-back').removeClass('none');
 
@@ -92,12 +108,66 @@
         //edit
         $(document).on('click', '#edit-file', function(e) {
             e.preventDefault();
-            window.open('/edit/' + id_file, '_blank', 'width=800,height=600');
+            $('.modal-edit-body').html('');
+            
+            $.ajax({
+                url: '/edit/' + id_file,
+                method: 'GET',         
+                success: function(respuesta) {
+                    $('.modal-edit-body').html(respuesta);
+                    $('#modal-edit-document').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error en la petición AJAX:', error);
+                }
+            });
         });
+        //cancel edit form
+        $(document).on('click', '.btn-cancel-document', function(e) {
+            e.preventDefault();
+            $('#modal-edit-document').modal('hide');
+        });
+        //send edit form
+        $(document).on('submit', '#form-edit-document', function(e) {
+            e.preventDefault(); 
+
+            let url = $(this).attr('action');
+
+            let formData = new FormData(this);//incluye campos con archivos
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(respuesta) {
+                    let res = JSON.parse(respuesta);
+                    if(res.state == true){
+                        $('.body-repo-documents').html('');
+                        $.ajax({
+                            url: '/documents/doc/'+id_category, 
+                            method: 'GET',         
+                            success: function(respuesta) {
+                                $('.body-repo-documents').html(respuesta);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error en la petición AJAX:', error);
+                            }
+                        });
+                        $('#modal-edit-document').modal('hide');
+                    }
+                },
+                error: function(err) {
+                    console.error("Error:", err);
+                }
+            });
+        });
+
         //download
         $(document).on('click', '#download-file', function(e) {
             e.preventDefault();
-            alert('descargar');
+            
         });
     });
 </script>

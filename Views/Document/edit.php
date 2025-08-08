@@ -1,9 +1,21 @@
 <?php 
-include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');?>
+    if(!$ajax){
+        include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');
+    }
+
+    if (isset($_SESSION['error_message'])) {
+        echo "<p>{$_SESSION['error_message']}</p>";
+        unset($_SESSION['error_message']); 
+    }
+    if (isset($_SESSION['success_message'])) {
+        echo "<p>{$_SESSION['success_message']}</p>";
+        unset($_SESSION['success_message']); 
+    }
+?>
 <div class="container content-load-documents">
     <h4>Edit Evidence</h4>
     
-    <form method="POST" action="/update/<?=$document['state']==true ? $document['data'][0]['id_document'] : ''?>" enctype="multipart/form-data">
+    <form method="POST" action="/update/<?=$document['state']==true ? $document['data'][0]['id_document'] : ''?>" enctype="multipart/form-data" id="form-edit-document">
         <div class="mb-3">
             <label for="description" class="form-label">Description</label>
             <input type="text" class="form-control" id="description" aria-describedby="description" name="description" value="<?= $document['state']==true ? $document['data'][0]['description'] : '' ?>">
@@ -43,7 +55,7 @@ include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');?>
             <div id="fileHelp" class="form-text">charge a evidence</div>
             <?php if($document['state'] == true && $document['data'][0]['url'] && file_exists(BASE_PATH.'Public'.DIRECTORY_SEPARATOR.'Storage'.DIRECTORY_SEPARATOR.$document['data'][0]['url'])){ ?>
                 <a href="<?= '/Public'.DIRECTORY_SEPARATOR.'Storage'.DIRECTORY_SEPARATOR.$document['data'][0]['url'] ?>" target="_blank"> <?= $document['data'][0]['url'] ?> </a>
-                <input type="hidden" name="file_exist" value="<?$document['data'][0]['url']?>">
+                <input type="hidden" name="file_exist" value="<?=$document['data'][0]['url']?>">
             <?php } else { ?>
                 <input type="hidden" name="file_exist" value="">
             <?php } ?>
@@ -67,12 +79,15 @@ include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');?>
         </div>
         
         <div class="content-btn-documents">
-            <button type="submit" class="btn btn-primary">Save</button>
-            <a href="/documents" class="btn btn-danger">Cancel</a>
+            <button type="submit" class="btn btn-primary btn-submit-document">Save</button>
+            <a href="/documents" class="btn btn-danger btn-cancel-document">Cancel</a>
         </div>
 
     </form>
 </div>
 
 
-<?php include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'body.php');?>
+<?php 
+if(!$ajax){
+    include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'body.php');
+}?>

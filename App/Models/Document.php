@@ -7,5 +7,5 @@ class Document extends Model {
 
     protected $table = "documents";
 
-    protected $allowedColumns = ['id', 'id_user', 'id_category', 'description', 'url', 'date','*'];
+    protected $allowedColumns = ['id_document', 'id_user', 'id_category', 'description', 'url', 'date','*'];
 }

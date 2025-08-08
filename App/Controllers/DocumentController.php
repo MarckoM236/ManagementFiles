@@ -136,6 +136,11 @@ class DocumentController extends Controller{
         $errors = [];
         $old = [];
 
+        $ajax = false;
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            $ajax = true;
+        }
+
         if (empty($data['description'])) {
             $errors['description'] = 'The Description field is obligatory';
         }
@@ -147,11 +152,16 @@ class DocumentController extends Controller{
         }
 
         //validate only not exits fiel old
-        if (!isset($data['file_exits']) && (!isset($files['file']) || $files['file']['error'] == UPLOAD_ERR_NO_FILE)) {
+        if (!isset($data['file_exist']) && !isset($files['file'])) {
                 $errors['file'] = 'The File field is obligatory';  
         }
 
         if (!empty($errors)) {
+            if($ajax){
+                echo json_encode(['state'=>'error-filed','errors'=>$errors]);
+                exit;
+            }
+
             $this->fieldValidate('/edit/'.$id_document,$errors,$old);
             return; // Detener la ejecución
         }
@@ -161,7 +171,7 @@ class DocumentController extends Controller{
         $description = $data['description'];
         $category = $data['category'];
         $date = $data['date'];
-        $evidence = $data['file_exits'] ?? "";
+        $evidence = $data['file_exist'] ?? "";
     
         try {
             if (isset($files) && $files['file']['error'] == UPLOAD_ERR_OK) {
@@ -178,10 +188,20 @@ class DocumentController extends Controller{
                 $dest_path = $uploadFileDir . $newFileName;
 
                 if (!is_dir($uploadFileDir)) {
+                    if($ajax){
+                        $message = "El directorio $uploadFileDir no existe";
+                        echo json_encode(['state'=>false,'message'=>$message]);
+                        exit;
+                    }
                     die("El directorio $uploadFileDir no existe");
                 }
 
                 if (!is_writable($uploadFileDir)) {
+                    if($ajax){
+                        $message = "El directorio $uploadFileDir no tiene permisos de escritura";
+                        echo json_encode(['state'=>false,'message'=>$message]);
+                        exit;
+                    }
                     die("El directorio $uploadFileDir no tiene permisos de escritura");
                 }
 
@@ -197,19 +217,43 @@ class DocumentController extends Controller{
                     }
 
                 } else {
-                    //$message = 'There was some error moving the file to upload directory.';
+                    if($ajax){
+                        $message = 'There was some error moving the file to upload directory.';
+                        echo json_encode(['state'=>false,'message'=>$message]);
+                        exit;
+                    }
+                    
                     die("Error al mover el archivo desde $fileTmpPath hacia $dest_path");
                 }
             } 
 
-            $values = ['id_category'=>$category,'description'=>$description,'url'=>$evidence,'date'=>$date];
+            $values = ['id_category'=>[$category,'string'],'description'=>[$description,'string'],'url'=>[$evidence,'string'],'date'=>[$date,'string']];
 
             //function update of the model
+            $where = ['id_document'=>[$id_document,'int']];
+            $documentUpdate = $this->model->update(['id_category','description','url','date'],$values,$where);
+
             //--
             
         } catch (\Throwable $th) {
+            if($ajax){
+                $message = "Error al cargar el documento: " . $th->getMessage();
+                echo json_encode(['state'=>false,'message'=>$message]);
+                exit;
+            }
             die("Error al cargar el documento: " . $th->getMessage());
         }
+
+        //redirect to url whit message
+
+            if($ajax){
+                $message = $documentUpdate['message'];
+                echo json_encode(['state'=>$documentUpdate['state'],'message'=>$message]);
+                exit;
+            }
+            
+            $typeMessage = $documentUpdate['state'] == true ? 'success_message' : 'error_message';
+            $this->redirectTo('/edit/'.$id_document,$documentUpdate['message'],$typeMessage);
         
     }
 
@@ -218,8 +262,13 @@ class DocumentController extends Controller{
         $categories = $this->modelCategory->getQuery(['id_category','name']);
         $where = isset($params[0]) ? ['id_document'=>$params[0]] : [];
         $document = $this->model->getQuery(['*'],$where);
+        $ajax = false;
 
-        $this->render('Document'.DIRECTORY_SEPARATOR.'edit',['categories'=>$categories,'document'=>$document]);
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            $ajax = true;
+        }
+
+        $this->render('Document'.DIRECTORY_SEPARATOR.'edit',['categories'=>$categories,'document'=>$document, 'ajax'=>$ajax]);
     }
 
     //delete a register and file if exist by id

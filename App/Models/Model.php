@@ -6,6 +6,7 @@ use App\Config\Conection;
 class Model {
     private $con;
     protected $table;
+    protected $allowedColumns;
 
     public function __construct(){
         $conection= new Conection();
@@ -251,11 +252,84 @@ class Model {
     }
 
     //update record by id
-    public function update(){
+    public function update($fields=[],$data=[],$where=[]){
         //validate allowed fields
         $validFields = array_intersect($fields, $this->allowedColumns);
         if (empty($validFields)) {
-            return ['state' => 'false', "message" => "No valid fields requested."];
+            return ['state' => false, "message" => "No valid fields requested."];
         }
+
+        if((count($fields) === count($data)) && count($where) > 0){
+            if($this->con['state'] == true){
+                $stringFields = implode("=?,",$validFields) . "=?";
+                $stringWhere = "";
+                $types = "";
+                $dataFields = [];
+                $whereFields = [];
+
+                $sql = "UPDATE $this->table SET $stringFields";
+
+                foreach($data as $key => $value){
+                    //if not secure ignore column
+                    if (in_array($key, $this->allowedColumns)) {
+                        $types .= $value[1][0]; //first character of string
+                        $dataFields[] = $value[0];
+                    }
+                    else{
+                        continue;
+                    }
+                }
+
+                $conditions = [];
+                foreach($where as $key => $value){
+                    //if not secure ignore column
+                    if (in_array($key, $this->allowedColumns)) {
+                        $conditions[] = "$key= ?";
+                        $types .= $value[1][0]; //first character of string
+                        $whereFields[] = $value[0];
+                    }
+                    else{
+                        continue;
+                    }
+                }
+                $stringWhere = " WHERE " . implode(" AND ", $conditions);
+                $sql .= $stringWhere;
+
+                //prepare query
+                $stmt = $this->con['conection']->prepare($sql);
+
+                if ($stmt === false) {
+                    //if exist sintax error
+                    return ['state' => false, "message" => "Error to prepare the query."];
+                }
+
+                $allFields = array_merge($dataFields,$whereFields);
+
+                if (!empty($allFields)) {
+                    $stmt->bind_param($types, ...$allFields);
+                }
+
+                //execute query
+                if ($stmt->execute()) {
+                    if ($stmt->affected_rows > 0) {
+                        $response = ['state' => true, "message" => 'Updated successfully.'];
+                    } else {
+                        $response = ['state' => false, "message" => "No rows were updated."];
+                    }
+                } else {
+                    $response = ['state' => false, "message" => "Could not update the row."];
+                }
+
+                $stmt->close();
+                return $response;
+            }
+            else{
+                return ['state'=>false,"message"=>$this->con['message']];
+            }
+        }
+        else{
+            return ['state'=>false,"message"=>"You must specify all condition parameters"];
+        }
+        
     }
 }
