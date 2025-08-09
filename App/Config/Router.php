@@ -1,5 +1,8 @@
 <?php
 namespace App\Config;
+
+use Throwable;
+
 include('app.php');
 
 

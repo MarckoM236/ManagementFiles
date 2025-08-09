@@ -186,5 +186,17 @@
   .content-login, .content-register, .content-load-documents, .content-category{
     width: 95%;
   }
+  .folders, .files{
+    width: 100%;
+
+    label{
+        display: inline-block; 
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 200px;
+        text-align: center;
+    }
+  }
 }
 
