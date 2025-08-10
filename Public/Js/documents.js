@@ -91,6 +91,14 @@ $(document).ready(function(){
                 let res = JSON.parse(respuesta);
                 if(res.state == true){
                     $('.body-repo-documents').html('');
+
+                    //toast message
+                    $('#liveToast .toast-body').html('Document was updated sucessfully.');
+                    $('.toast-time').text(new Date().toLocaleTimeString());
+
+                    // show toast
+                    let toast = new bootstrap.Toast(document.getElementById('liveToast'));
+                    toast.show();
                     $.ajax({
                         url: '/documents/doc/'+id_category, 
                         method: 'GET',         
@@ -103,9 +111,25 @@ $(document).ready(function(){
                     });
                     $('#modal-edit-document').modal('hide');
                 }
+                else{
+                    //toast message
+                    $('#liveToast .toast-body').html('<div class="alert alert-success" role="alert">Document was not updated.</div>');
+                    $('.toast-time').text(new Date().toLocaleTimeString());
+
+                    // show toast
+                    let toast = new bootstrap.Toast(document.getElementById('liveToast'));
+                    toast.show();
+                }
             },
             error: function(err) {
                 console.error("Error:", err);
+                //toast message
+                $('#liveToast .toast-body').html('<div class="alert alert-danger" role="alert">Document was not updated.</div>');
+                $('.toast-time').text(new Date().toLocaleTimeString());
+
+                // show toast
+                let toast = new bootstrap.Toast(document.getElementById('liveToast'));
+                toast.show();
             }
         });
     });

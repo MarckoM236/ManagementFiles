@@ -1,15 +1,4 @@
-<?php 
-    include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');
-
-    if (isset($_SESSION['error_message'])) {
-        echo "<p>{$_SESSION['error_message']}</p>";
-        unset($_SESSION['error_message']); 
-    }
-    if (isset($_SESSION['success_message'])) {
-        echo "<p>{$_SESSION['success_message']}</p>";
-        unset($_SESSION['success_message']); 
-    }
-?>
+<?php include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');?>
 
 <div class="container content-documents">
     <div class="head-repo-documents">
@@ -24,21 +13,20 @@
     </div>
     <div class="body-repo-documents">
         <?php 
-            if(isset($categories['state']) && $categories['state'] == true && isset($categories['data'])){
-                foreach($categories['data'] as $category){ 
+            if(isset($categories['state']) && $categories['state'] == true && isset($categories['data'])):
+                foreach($categories['data'] as $category):
         ?>
                 <div class="folders" data-id="<?= $category['id_category'] ?>">
                     <i class="fa fa-folder fa-5x"></i>
                     <label for=""><?= $category['name'] ?></label>
                 </div>
         <?php 
-                } 
-            }
-            else{
+            endforeach;
+            else:
         ?>
                 <div class="folders">Not found categories.</div>
         <?php
-            }
+            endif;
         ?>
     </div>
 </div>

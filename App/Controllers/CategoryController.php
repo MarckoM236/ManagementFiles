@@ -57,4 +57,55 @@ class CategoryController extends Controller{
         $this->redirectTo('/allCategories',$insert['message'],$typeMessage);
 
     }
+
+    public function edit($params,$data){
+        $id_category = isset($params[0]) ? $params[0] : null;
+
+        $where = ['id_category'=>$id_category];
+        $category = $this->model->getQuery(['*'],$where);
+        $this->render('Category'.DIRECTORY_SEPARATOR.'edit',['category'=>$category]);
+    }
+
+    public function update($params,$data){
+        $id_category = isset($params[0]) ? $params[0] : null;
+        //validate
+        $errors = [];
+        $old = [];
+
+        if (empty($data['name'])) {
+            $errors['name'] = 'The Name field is obligatory';
+        }
+        if (empty($data['description'])) {
+            $errors['description'] = 'The Description field is obligatory';
+        }
+
+        if (!empty($errors)) {
+            $this->fieldValidate('/categoryEdit/'.$id_category,$errors,$old);
+            return; // Detener la ejecución
+        }
+
+        
+        //get data POST
+        $name = $data['name'];
+        $description = $data['description'];
+    
+        try {
+
+            $values = ['name'=>[$name,'string'],'description'=>[$description,'string']];
+
+            //function update of the model
+            $where = ['id_category'=>[$id_category,'int']];
+            $categoryUpdate = $this->model->update(['name','description'],$values,$where);
+
+            //--
+            
+        } catch (\Throwable $th) {
+            die("Error al cargar el documento: " . $th->getMessage());
+        }
+
+        //redirect to url whit message
+        $typeMessage = $categoryUpdate['state'] == true ? 'success_message' : 'error_message';
+        $this->redirectTo('/allCategories',$categoryUpdate['message'],$typeMessage);
+        
+    }
 }

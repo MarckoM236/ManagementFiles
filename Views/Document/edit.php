@@ -2,15 +2,6 @@
     if(!$ajax){
         include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');
     }
-
-    if (isset($_SESSION['error_message'])) {
-        echo "<p>{$_SESSION['error_message']}</p>";
-        unset($_SESSION['error_message']); 
-    }
-    if (isset($_SESSION['success_message'])) {
-        echo "<p>{$_SESSION['success_message']}</p>";
-        unset($_SESSION['success_message']); 
-    }
 ?>
 <div class="container content-load-documents">
     <h4>Edit Evidence</h4>
@@ -32,13 +23,13 @@
             <select name="category" id="category" class="form-control">
                 <option value="">Select a category</option>
                 <?php 
-                    if(isset($categories) && $categories['state']==true){
-                        foreach($categories['data'] as $category){
+                    if(isset($categories) && $categories['state']==true):
+                        foreach($categories['data'] as $category):
                 ?>
                         <option value="<?= $category['id_category']?>" <?php if($document['state'] == true && $document['data'][0]['id_category'] == $category['id_category']){ ?> selected <?php } ?>"><?= $category['name']?></option>
                 <?php
-                        }
-                    } 
+                        endforeach;
+                    endif; 
                 ?>
             </select>
             <div id="categoryHelp" class="form-text">Categories</div>

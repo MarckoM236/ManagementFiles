@@ -31,13 +31,13 @@ unset($_SESSION['olds']);
             <select name="category" id="category" class="form-control">
                 <option value="" selected>Select a category</option>
                 <?php 
-                    if(isset($categories) && $categories['state']==true){
-                        foreach($categories['data'] as $category){
+                    if(isset($categories) && $categories['state']==true):
+                        foreach($categories['data'] as $category):
                 ?>
                         <option value="<?= $category['id_category']?>" <?php if($category_old == $category['id_category']){?> selected <?php } ?>><?= $category['name']?></option>
                 <?php
-                        }
-                    } 
+                        endforeach;
+                    endif;
                 ?>
             </select>
             <div id="categoryHelp" class="form-text">Categories</div>
