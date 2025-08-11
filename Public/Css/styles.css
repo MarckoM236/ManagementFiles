@@ -3,6 +3,12 @@
     margin-bottom: 15px;
 }
 
+.head-pages{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 /*Home page*/
 .home-welcome{
     font-size: 20px;
@@ -126,6 +132,12 @@
     }
 }
 
+.content-category-index {
+    .table{
+        width: 95%;
+    }
+}
+
 /*View documents*/
 .content-documents{
     .head-repo-documents{
@@ -137,7 +149,7 @@
     }
 
     .body-repo-documents{
-        padding: 20px;
+        padding: 10px;
         width: 100%;
         border: 1px #E8E1E1 solid;
         border-radius: 10px;
@@ -150,7 +162,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 15px;
+            margin: 10px;
         }
 
         .files{
@@ -186,17 +198,20 @@
   .content-login, .content-register, .content-load-documents, .content-category{
     width: 95%;
   }
-  .folders, .files{
-    width: 100%;
+  
+}
 
-    label{
-        display: inline-block; 
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 200px;
-        text-align: center;
+@media (max-width: 530px) {
+    .folders, .files{
+        width: 100%;
+        label{
+            display: inline-block; 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 200px;
+            text-align: center;
+        }
     }
-  }
 }
 

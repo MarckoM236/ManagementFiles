@@ -1,7 +1,7 @@
 <?php include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');?>
 
 <div class="container content-documents">
-    <div class="head-repo-documents">
+    <div class="head-pages">
         <h4>All Documents</h4>
         <div class="content-btn">
             <a href="/create" class="btn btn-success">Load File</a>

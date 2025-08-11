@@ -1,10 +1,13 @@
 <?php include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');?>
 
-<div class="container">
-    <h4>All categories</h4>
-    <div class="content-btn">
-        <a href="/categoryCreate" class="btn btn-success">New category</a>
+<div class="container content-category-index">
+    <div class="head-pages">
+        <h4>All categories</h4>
+        <div class="content-btn">
+            <a href="/categoryCreate" class="btn btn-success">New category</a>
+        </div>
     </div>
+
     <table class="table table-bordered">
         <thead>
             <th>No</th>
