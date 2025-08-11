@@ -9,16 +9,6 @@ $email_old = isset($_SESSION['olds']) && !empty($_SESSION['olds']['email'] ) ? $
 
 //clear session old
 unset($_SESSION['olds']); 
-
-//messages response
-if (isset($_SESSION['error_message'])) {
-        echo "<p>{$_SESSION['error_message']}</p>";
-        unset($_SESSION['error_message']); 
-}
-if (isset($_SESSION['success_message'])) {
-    echo "<p>{$_SESSION['success_message']}</p>";
-    unset($_SESSION['success_message']); 
-}
 ?>
 
 

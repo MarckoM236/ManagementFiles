@@ -273,6 +273,11 @@ class DocumentController extends Controller{
 
     //delete a register and file if exist by id
     public function delete($params,$data){
+        $ajax = false;
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            $ajax = true;
+        }
+
         $where = isset($params[0]) ? ['id_document'=>$params[0]] : [];
 
         if($this->model->getByParams($where)){
@@ -300,8 +305,39 @@ class DocumentController extends Controller{
         }
 
         //redirect to url whit message
+
+        if($ajax){
+            $message = $result['message'];
+            echo json_encode(['state'=>$result['state'],'message'=>$message]);
+            exit;
+        }
+
         $typeMessage = $result['state'] == 'true' ? 'success_message' : 'error_message';
         $this->redirectTo('/documents',$result['message'],$typeMessage);
         
+    }
+
+    public function downloadDocument($params,$data){
+        $id_document = isset($params[0]) ? $params[0] : null;
+        $where = ['id_document'=>[$id_document,'int']];
+        $document = $this->model->getQueryStatement(['url'],$where);
+
+        $path = BASE_PATH.'Public'.DIRECTORY_SEPARATOR.'Storage'.DIRECTORY_SEPARATOR;
+        $fileName = $document['data']['url'];
+
+        if ($document['state']==true && isset($document['data']['url']) && file_exists($path.$fileName)) {
+            // download force
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $fileName . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($path.$fileName));
+            readfile($path.$fileName);
+            exit;
+        } else {
+            $this->redirectTo('/documents','file not found.','error_message');
+        }
     }
 }

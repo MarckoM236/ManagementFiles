@@ -20,5 +20,6 @@ else{
 <!-- menu -->
  <div id="menu-file" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; padding:10px;">
     <a href="#" id="edit-file">Edit</a>
+    <a href="#" id="delete-file">Delete</a>
     <a href="#" id="download-file">Download</a>
 </div>

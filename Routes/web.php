@@ -7,6 +7,7 @@ $routes['/store'] = ['POST', 'DocumentController@store','Auth'];
 $routes['/edit'] = ['GET', 'DocumentController@edit','Auth'];
 $routes['/update'] = ['POST', 'DocumentController@update','Auth'];
 $routes['/delete'] = ['GET', 'DocumentController@delete','Auth'];
+$routes['/download'] = ['GET', 'DocumentController@downloadDocument','Auth'];
 
 $routes['/allCategories'] = ['GET', 'CategoryController@index','Auth'];
 $routes['/categoryCreate'] = ['GET', 'CategoryController@create','Auth'];

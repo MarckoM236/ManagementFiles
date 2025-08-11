@@ -108,4 +108,21 @@ class CategoryController extends Controller{
         $this->redirectTo('/allCategories',$categoryUpdate['message'],$typeMessage);
         
     }
+
+    public function delete($params,$data){
+        $id_category = isset($params[0]) ? $params[0] : null;
+        $where = ['id_category'=>$id_category];
+
+        if($this->model->getByParams($where)){
+            $result = $this->model->delete($where);
+        }
+        else{
+            $result = ['state'=>'false','message'=>'Error when trying to delete the record, !does not exist'];
+        }
+
+        //redirect to url whit message
+        $typeMessage = $result['state'] == 'true' ? 'success_message' : 'error_message';
+        $this->redirectTo('/allCategories',$result['message'],$typeMessage);
+        
+    }
 }
