@@ -94,11 +94,27 @@ class AuthController extends Controller{
         $userData = $this->model->getQueryStatement(['id_user','name','last_name','password'],$where);
 
         if($userData['state'] == 'true'){
+            $sqlPermissions = "select r.name as rol,p.action as actions from roles_users ru left join roles r on ru.id_role = r.id_rol 
+                            left join roles_permissions rp on r.id_rol = rp.id_role 
+                            left join permissions p on rp.id_permission = p.id_permission ";
+
+            $wherePermissions = ['ru.id_user'=> $userData['data']['id_user']];
+
+            $permissions = $this->model->customQuery($sqlPermissions,$wherePermissions);
+
             if(password_verify($data['password'], $userData['data']['password'])){
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = $userData['data']['id_user'];
                 $_SESSION['user_name'] = $userData['data']['name'] . ' ' . $userData['data']['last_name'];
                 $_SESSION['loggedin'] = true;
+                if($permissions['state']=='true'){
+                    $pers = [];
+                    foreach($permissions['data'] as $per){
+                        $pers[] = $per['actions'];
+                    }
+                    $_SESSION['role'] = $permissions['data'][0]['rol'];
+                    $_SESSION['actions'] = $pers;
+                }
 
                 $this->redirectTo('/','Welcome '. $userData['data']['name'] . ' ' . $userData['data']['last_name'],'success_message');
             }

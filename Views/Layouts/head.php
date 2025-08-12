@@ -23,27 +23,33 @@
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="/">Home</a>
         </li>
-        <?php if ((isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true)) { ?>
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/documents">Documents</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/allCategories">Categories</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <?=isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Mi cuenta' ?>
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><a class="dropdown-item" href="/logout">Logout</a></li>
-          </ul>
-        </li>
-        <?php } else{ ?>
+        <?php if ((isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) ): ?>
+          <?php if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('document.query', $_SESSION['actions']) ) :?>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/documents">Documents</a>
+            </li>
+          <?php endif; ?>
+          <?php if(isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('category.query', $_SESSION['actions'])) :?>   
+            <li class="nav-item">
+              <a class="nav-link" href="/allCategories">Categories</a>
+            </li>
+          <?php endif; ?>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <?=isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Mi cuenta' ?>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <?php if (isset($_SESSION['actions']) && in_array('user.profile', $_SESSION['actions']) ) :?>
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+              <?php endif; ?>
+              <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
+          </li>
+        <?php else: ?>
           <li class="nav-item">
           <a class="nav-link" href="/login">Login</a>
         </li>
-        <?php } ?>
+        <?php endif; ?>
       </ul>
     </div>
 </nav>

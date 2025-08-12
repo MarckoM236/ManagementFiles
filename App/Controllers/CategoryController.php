@@ -12,14 +12,24 @@ class CategoryController extends Controller{
     }
 
     public function index(){
-        $where = ['id_user'=>$_SESSION['user_id']];
-        $categories = $this->model->getQuery(['*'],$where);
-        $this->render('Category'.DIRECTORY_SEPARATOR.'index',['categories'=>$categories]);
+        if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('category.query', $_SESSION['actions']) ){
+            $where = ['id_user'=>$_SESSION['user_id']];
+            $categories = $this->model->getQuery(['*'],$where);
+            $this->render('Category'.DIRECTORY_SEPARATOR.'index',['categories'=>$categories]);
+        }
+        else{
+            $this->render('Errors'.DIRECTORY_SEPARATOR.'403');
+        }
     }
 
     //load form 'create page'
     public function create($params,$data){
-        $this->render('Category'.DIRECTORY_SEPARATOR.'create');
+        if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('category.create', $_SESSION['actions']) ){
+            $this->render('Category'.DIRECTORY_SEPARATOR.'create');
+        }
+        else{
+            $this->render('Errors'.DIRECTORY_SEPARATOR.'403');
+        }
     }
 
     //get data by method post and  create register
@@ -61,9 +71,14 @@ class CategoryController extends Controller{
     public function edit($params,$data){
         $id_category = isset($params[0]) ? $params[0] : null;
 
-        $where = ['id_category'=>$id_category];
-        $category = $this->model->getQuery(['*'],$where);
-        $this->render('Category'.DIRECTORY_SEPARATOR.'edit',['category'=>$category]);
+        if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('category.update', $_SESSION['actions']) ){
+            $where = ['id_category'=>$id_category];
+            $category = $this->model->getQuery(['*'],$where);
+            $this->render('Category'.DIRECTORY_SEPARATOR.'edit',['category'=>$category]);
+        }
+        else{
+            $this->render('Errors'.DIRECTORY_SEPARATOR.'403');
+        }
     }
 
     public function update($params,$data){
