@@ -16,38 +16,49 @@ class DocumentController extends Controller{
 
     //initial load page
     public function index($params,$data){
-        //validate if exists params form query documents
-        if(isset($params[0]) && isset($params[1]) && $params[0]==='doc'){
+        //validate permissions
+        if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('document.query', $_SESSION['actions']) ){
+            //validate if exists params form query documents
+            if(isset($params[0]) && isset($params[1]) && $params[0]==='doc'){
 
-            if(!is_numeric($params[1])){
-                $documents = ['state'=>false,'message'=>'Not found.'];
+                if(!is_numeric($params[1])){
+                    $documents = ['state'=>false,'message'=>'Not found.'];
+                    $this->render('Document'.DIRECTORY_SEPARATOR.'documents',["documents"=>$documents]);
+                    return;
+                }
+                
+                $sql = "SELECT CONCAT(user.name,' ',user.last_name) as user_name, category.name as category_name, documents.id_document as document_id, documents.description as description,documents.url as url,documents.date as date
+                    FROM documents 
+                    LEFT JOIN users As user ON user.id_user = documents.id_user
+                    LEFT JOIN categories As category ON category.id_category = documents.id_category";
+
+                $whereDocuments = ['documents.id_user'=>$_SESSION['user_id'],'documents.id_category'=>$params[1]];
+                $documents = $this->model->customQuery($sql,$whereDocuments);
+
                 $this->render('Document'.DIRECTORY_SEPARATOR.'documents',["documents"=>$documents]);
                 return;
             }
-            
-            $sql = "SELECT CONCAT(user.name,' ',user.last_name) as user_name, category.name as category_name, documents.id_document as document_id, documents.description as description,documents.url as url,documents.date as date
-                FROM documents 
-                LEFT JOIN users As user ON user.id_user = documents.id_user
-                LEFT JOIN categories As category ON category.id_category = documents.id_category";
 
-            $whereDocuments = ['documents.id_user'=>$_SESSION['user_id'],'documents.id_category'=>$params[1]];
-            $documents = $this->model->customQuery($sql,$whereDocuments);
+            $whereCategories = ['id_user'=>$_SESSION['user_id']];
+            $categories = $this->modelCategory->getQuery(['id_category','name'],$whereCategories);
 
-            $this->render('Document'.DIRECTORY_SEPARATOR.'documents',["documents"=>$documents]);
-            return;
+            $this->render('Document'.DIRECTORY_SEPARATOR.'index',["categories"=>$categories]);
         }
-
-        $whereCategories = ['id_user'=>$_SESSION['user_id']];
-        $categories = $this->modelCategory->getQuery(['id_category','name'],$whereCategories);
-
-        $this->render('Document'.DIRECTORY_SEPARATOR.'index',["categories"=>$categories]);
+        else{
+            $this->render('Errors'.DIRECTORY_SEPARATOR.'403');
+        }
     }
 
     //load form 'create page'
     public function create($params,$data){
-        $where = ['id_user'=>$_SESSION['user_id']];
-        $categories = $this->modelCategory->getQuery(['id_category','name'],$where);
-        $this->render('Document'.DIRECTORY_SEPARATOR.'create',['categories'=>$categories]);
+        if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('document.create', $_SESSION['actions']) ){
+            $where = ['id_user'=>$_SESSION['user_id']];
+            $categories = $this->modelCategory->getQuery(['id_category','name'],$where);
+            $this->render('Document'.DIRECTORY_SEPARATOR.'create',['categories'=>$categories]);
+        }
+        else{
+            $this->render('Errors'.DIRECTORY_SEPARATOR.'403');
+        }
     }
 
     //get data by method post and  create register
@@ -259,16 +270,22 @@ class DocumentController extends Controller{
 
     //load form 'edit page'
     public function edit($params,$data){
-        $categories = $this->modelCategory->getQuery(['id_category','name']);
-        $where = isset($params[0]) ? ['id_document'=>$params[0]] : [];
-        $document = $this->model->getQuery(['*'],$where);
-        $ajax = false;
+        //validate permissions
+        if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('document.update', $_SESSION['actions']) ){
+            $categories = $this->modelCategory->getQuery(['id_category','name']);
+            $where = isset($params[0]) ? ['id_document'=>$params[0]] : [];
+            $document = $this->model->getQuery(['*'],$where);
+            $ajax = false;
 
-        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-            $ajax = true;
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                $ajax = true;
+            }
+
+            $this->render('Document'.DIRECTORY_SEPARATOR.'edit',['categories'=>$categories,'document'=>$document, 'ajax'=>$ajax]);
         }
-
-        $this->render('Document'.DIRECTORY_SEPARATOR.'edit',['categories'=>$categories,'document'=>$document, 'ajax'=>$ajax]);
+        else{
+             $this->render('Errors'.DIRECTORY_SEPARATOR.'403');
+        }
     }
 
     //delete a register and file if exist by id

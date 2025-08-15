@@ -4,7 +4,7 @@
     <div class="head-pages">
         <h4>All Documents</h4>
         <div class="content-btn">
-            <a href="/create" class="btn btn-success">Load File</a>
+            <a href="/create" class="btn btn-success" <?php if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('document.create', $_SESSION['actions']) ) : echo 'class="disabled" onclick="return false;"'; endif; ?>>Load File</a>
         </div>
     </div>
     

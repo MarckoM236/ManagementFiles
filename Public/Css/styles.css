@@ -193,6 +193,33 @@
   }
 }
 
+/*disabled elements*/
+a.disabled {
+    color: gray;
+    pointer-events: none; 
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+/*Errors page*/
+/*Page 403*/
+.content-403{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+
+    .icon-alert{
+        color: red;
+        font-size: 100px;
+    }
+    .icon-robot{
+        color: #5665ba;
+        font-size: 30px;
+    }
+}
+
 /*Media querys*/
 @media (max-width: 920px) {
   .content-login, .content-register, .content-load-documents, .content-category{
