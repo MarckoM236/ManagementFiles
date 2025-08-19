@@ -21,3 +21,5 @@ $routes['/registerStore'] = ['POST', 'AuthController@registerStore','Guest'];
 $routes['/login'] = ['GET', 'AuthController@login','Guest'];
 $routes['/postLogin'] = ['POST', 'AuthController@postLogin','Guest'];
 $routes['/logout'] = ['GET', 'AuthController@logout','Auth'];
+$routes['/profile'] = ['GET', 'AuthController@getProfile','Auth'];
+$routes['/profileUpdate'] = ['POST', 'AuthController@updateProfile','Auth'];

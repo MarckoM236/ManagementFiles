@@ -145,4 +145,84 @@ class AuthController extends Controller{
 
         $this->redirectTo('/login', 'successfully logged out.', 'success_message');
     }
+
+    public function getProfile(){
+        if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('user.profile', $_SESSION['actions']) ){
+            $where = ['id_user'=>$_SESSION['user_id']];
+            $profile = $this->model->getQuery(['name','last_name','email'],$where);
+            $this->render('Auth'.DIRECTORY_SEPARATOR.'profile',['profile'=>$profile]);
+        }
+        else{
+            $this->render('Errors'.DIRECTORY_SEPARATOR.'403');
+        }
+    }
+
+    public function updateProfile($params, $data){
+        //validate
+        $errors = [];
+        $old = [];
+
+        if (empty($data['name'])) {
+            $errors['name'] = 'The user name field is obligatory';
+        }
+        if (empty($data['last_name'])) {
+            $errors['last_name'] = 'The user last name field is obligatory';
+        }
+        if (empty($data['email'])) {
+            $errors['email'] = 'The user email field is obligatory';
+        }
+
+        //validate password
+        if ($data['password'] !== '' || $data['confirm_password'] !== '') {
+            if ($data['confirm_password'] !== $data['password']) {
+                $errors['confirm_password'] = 'The user confirm password and the user password are not the same';
+            }
+            if ((strlen($data['confirm_password']) < 8) || strlen($data['password']) < 8 ) {
+                $errors['password'] = 'The password must contain a minimum of 8 characters.';
+            }
+        }
+        
+
+        if (!empty($errors)) {
+            $this->fieldValidate('/profile',$errors,$old);
+            return; // Detener la ejecución
+        }
+
+        
+        //get data POST
+        $name = $data['name'];
+        $last_name = $data['last_name'];
+        $email = $data['email'];
+        
+
+        try {
+            $values = ['name'=>[$name,'string'],'last_name'=>[$last_name,'string'],'email'=>[$email,'string']];
+            $fields = ['name','last_name','email'];
+
+            if($data['password'] !== ''){
+                $password = password_hash($data['password'], PASSWORD_DEFAULT);
+                $values['password']= [$password,'string'];
+                $fields[]='password';
+            }
+
+            //function update of the model
+            $where_ = ['id_user'=>$_SESSION['user_id']];
+            if($this->model->getByParams($where_)){
+                $where = ['id_user'=>[$_SESSION['user_id'],'int']];
+                $profileUpdate = $this->model->update($fields,$values,$where);
+            }
+            else{
+                $profileUpdate = ['state'=>false,'message'=>'Profile information not found'];
+            }
+
+            //--
+            
+        } catch (\Throwable $th) {
+            die("Error to the update the profile: " . $th->getMessage());
+        }
+
+        //redirect to url whit message
+        $typeMessage = $profileUpdate['state'] == true ? 'success_message' : 'error_message';
+        $this->redirectTo('/profile',$profileUpdate['message'],$typeMessage);
+    }
 }

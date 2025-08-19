@@ -40,7 +40,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <?php if (isset($_SESSION['actions']) && in_array('user.profile', $_SESSION['actions']) ) :?>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="/profile">Profile</a></li>
               <?php endif; ?>
               <li><a class="dropdown-item" href="/logout">Logout</a></li>
             </ul>
