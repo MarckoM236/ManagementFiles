@@ -20,7 +20,7 @@ endif;
 
 <!-- menu -->
  <div id="menu-file" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; padding:10px;">
-    <a href="#" id="edit-file" <?php if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('document.update', $_SESSION['actions']) ) : echo 'class="disabled" onclick="return false;"'; endif; ?>>Edit</a>
-    <a href="#" id="delete-file" <?php if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('document.delete', $_SESSION['actions']) ) : echo 'class="disabled" onclick="return false;"'; endif; ?>>Delete</a>
-    <a href="#" id="download-file" <?php if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('document.download', $_SESSION['actions']) ) : echo 'class="disabled" onclick="return false;"'; endif; ?>>Download</a>
+    <a href="#" id="edit-file" <?php if (!isset($_SESSION['role']) || !isset($_SESSION['actions']) || !in_array('document.update', $_SESSION['actions']) ) : echo 'class="disabled" onclick="return false;"'; endif; ?>>Edit</a>
+    <a href="#" id="delete-file" <?php if (!isset($_SESSION['role']) || !isset($_SESSION['actions']) || !in_array('document.delete', $_SESSION['actions']) ) : echo 'class="disabled" onclick="return false;"'; endif; ?>>Delete</a>
+    <a href="#" id="download-file" <?php if (!isset($_SESSION['role']) || !isset($_SESSION['actions']) || !in_array('document.download', $_SESSION['actions']) ) : echo 'class="disabled" onclick="return false;"'; endif; ?>>Download</a>
 </div>

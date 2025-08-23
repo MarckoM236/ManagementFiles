@@ -25,11 +25,11 @@
                         <td>
                             <a 
                                 href="/categoryEdit/<?= $item['id_category'] ?>" 
-                                class="text-primary <?php if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('category.update', $_SESSION['actions']) ) : echo 'disabled'; endif; ?>">
+                                class="text-primary <?php if (!isset($_SESSION['role']) || !isset($_SESSION['actions']) || !in_array('category.update', $_SESSION['actions']) ) : echo 'disabled'; endif; ?>">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                             </a> 
                             <a href="/categoryDelete/<?= $item['id_category'] ?>" 
-                                class="text-danger category-delete <?php if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('category.delete', $_SESSION['actions']) ) : echo 'disabled'; endif; ?>">
+                                class="text-danger category-delete <?php if (!isset($_SESSION['role']) || !isset($_SESSION['actions']) || !in_array('category.delete', $_SESSION['actions']) ) : echo 'disabled'; endif; ?>">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </a>
                         </td>
