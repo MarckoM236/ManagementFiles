@@ -334,6 +334,7 @@ class DocumentController extends Controller{
         
     }
 
+    // Download document file
     public function downloadDocument($params,$data){
         $id_document = isset($params[0]) ? $params[0] : null;
         $where = ['id_document'=>[$id_document,'int']];

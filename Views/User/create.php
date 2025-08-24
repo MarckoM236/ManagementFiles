@@ -5,6 +5,7 @@ include(VIEW_PATH.'Layouts'.DIRECTORY_SEPARATOR.'head.php');
 $name_old = isset($_SESSION['olds']) && !empty($_SESSION['olds']['name'] ) ? $_SESSION['olds']['name'] : '';
 $last_name_old = isset($_SESSION['olds']) && !empty($_SESSION['olds']['last_name'] ) ? $_SESSION['olds']['last_name'] : '';
 $email_old = isset($_SESSION['olds']) && !empty($_SESSION['olds']['email'] ) ? $_SESSION['olds']['email'] : '';
+$role_old = isset($_SESSION['olds']) && !empty($_SESSION['olds']['role'] ) ? $_SESSION['olds']['role'] : '';
 
 //clear session old
 unset($_SESSION['olds']); 
@@ -55,7 +56,7 @@ unset($_SESSION['olds']);
                 <?php 
                 if(isset($roles['state']) && $roles['state']=='true'):
                     foreach($roles['data'] as $role):?>
-                        <option value="<?= $role['id_rol']?>"><?= $role['name']?></option>
+                        <option value="<?= $role['id_rol']?>" <?php if($role['id_rol']==$role_old):?> selected <?php endif;?>><?= $role['name']?></option>
                     <?php 
                     endforeach;
                 endif; ?>

@@ -3,18 +3,22 @@ namespace App\Controllers;
 
 use App\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserRole;
 
 class AuthController extends Controller{
     private $model;
+    private $modelUserRole;
 
     public function __construct(){
         $this->model = new User();
+        $this->modelUserRole = new UserRole();
     }
 
     public function register(){
         $this->render('Auth'.DIRECTORY_SEPARATOR.'register');
     }
 
+    // Create new user with role default 'user'
     public function registerStore($params,$data){
         //validate
         $errors = [];
@@ -60,6 +64,11 @@ class AuthController extends Controller{
         $values = ['name'=>$name,'last_name'=>$last_name,'email'=>$email,'password'=>$password];
         $insert = $this->model->insert(['name','last_name','email','password'],$values);
 
+        if($insert['state']=='true'){
+            $valuesUserRole = ['id_role'=>1,'id_user'=>$insert['id']];
+            $insertRole = $this->modelUserRole->insert(['id_role','id_user'],$valuesUserRole);
+        }
+
 
         //redirect to url whit message
         $typeMessage = $insert['state'] == 'true' ? 'success_message' : 'error_message';
@@ -67,10 +76,12 @@ class AuthController extends Controller{
         
     }
 
+    // Load login page
      public function login(){
         $this->render('Auth'.DIRECTORY_SEPARATOR.'login');
     }
     
+    //Validate access user
     public function postLogin($params, $data){
         //validate
         $errors = [];
@@ -128,6 +139,8 @@ class AuthController extends Controller{
 
         
     }
+
+    // End session user
     public function logout(){
         $_SESSION = [];
 
@@ -146,6 +159,7 @@ class AuthController extends Controller{
         $this->redirectTo('/login', 'successfully logged out.', 'success_message');
     }
 
+    //Load page profile information
     public function getProfile(){
         if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('user.profile', $_SESSION['actions']) ){
             $where = ['id_user'=>$_SESSION['user_id']];
@@ -157,6 +171,7 @@ class AuthController extends Controller{
         }
     }
 
+    // Update profile information
     public function updateProfile($params, $data){
         //validate
         $errors = [];

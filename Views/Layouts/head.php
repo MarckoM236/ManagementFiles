@@ -34,6 +34,11 @@
               <a class="nav-link" href="/allCategories">Categories</a>
             </li>
           <?php endif; ?>
+          <?php if(isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('user.query', $_SESSION['actions'])) :?>   
+            <li class="nav-item">
+              <a class="nav-link" href="/allUsers">Users</a>
+            </li>
+          <?php endif; ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <?=isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Mi cuenta' ?>

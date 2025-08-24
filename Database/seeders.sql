@@ -18,13 +18,13 @@ VALUES(1, 'user.query'),
 (11,'document.query'),
 (12,'document.create'),
 (13,'document.update'),
-(14,'document.delete');
+(14,'document.delete'),
 (15,'document.download');
 
 /*create user admin*/
 INSERT INTO management.users
 (id_user, name, last_name, email, password)
-VALUES(1, 'Administrator', 'Administrator', 'administrator@app.com', '12345678');
+VALUES(1, 'Administrator', 'Administrator', 'administrator@app.com', '$2y$10$cbyZOIi3dreMuWWxqKigke3XAVfElyqJnXhTsYXVeq/AfDezK96W2');
 
 /*relation role - permissions*/
 INSERT INTO management.roles_permissions
@@ -53,7 +53,7 @@ VALUES(1, 1, 2),
 (22, 2, 11),
 (23, 2, 12),
 (24, 2, 13),
-(25, 2, 14);
+(25, 2, 14),
 (26, 2, 15);
 
 /*relation role for user administrator*/

@@ -11,6 +11,7 @@ class CategoryController extends Controller{
         $this->model = new Category();
     }
 
+    // Get all categories list
     public function index(){
         if (isset($_SESSION['role']) && isset($_SESSION['actions']) && in_array('category.query', $_SESSION['actions']) ){
             $where = ['id_user'=>$_SESSION['user_id']];
@@ -68,6 +69,7 @@ class CategoryController extends Controller{
 
     }
 
+    //load form 'edit page'
     public function edit($params,$data){
         $id_category = isset($params[0]) ? $params[0] : null;
 
@@ -81,6 +83,7 @@ class CategoryController extends Controller{
         }
     }
 
+    //Update category
     public function update($params,$data){
         $id_category = isset($params[0]) ? $params[0] : null;
         //validate
@@ -124,6 +127,7 @@ class CategoryController extends Controller{
         
     }
 
+    //Delete category
     public function delete($params,$data){
         $id_category = isset($params[0]) ? $params[0] : null;
         $where = ['id_category'=>$id_category];

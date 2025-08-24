@@ -13,7 +13,7 @@ CREATE TABLE categories (
     name VARCHAR(255) NOT NULL,
     description TEXT,
     id_user INT,
-    FOREIGN KEY (id_user) REFERENCES users(id_user)
+    FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE
 );
 
 -- Crear la tabla documents
@@ -24,8 +24,8 @@ CREATE TABLE documents (
     description TEXT,
     url VARCHAR(255),
     date DATETIME,
-    FOREIGN KEY (id_user) REFERENCES users(id_user),
-    FOREIGN KEY (id_category) REFERENCES categories(id_category)
+    FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
+    FOREIGN KEY (id_category) REFERENCES categories(id_category) ON DELETE CASCADE
 );
 
 -- Crear la tabla roles
@@ -45,8 +45,8 @@ CREATE TABLE roles_permissions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_role INT,
     id_permission INT,
-    FOREIGN KEY (id_role) REFERENCES roles(id_rol),
-    FOREIGN KEY (id_permission) REFERENCES permissions(id_permission)
+    FOREIGN KEY (id_role) REFERENCES roles(id_rol) ON DELETE CASCADE,
+    FOREIGN KEY (id_permission) REFERENCES permissions(id_permission) ON DELETE CASCADE
 );
 
 -- Crear la tabla roles_users
@@ -54,6 +54,6 @@ CREATE TABLE roles_users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_role INT, 
     id_user INT,
-    FOREIGN KEY (id_role) REFERENCES roles(id_rol),
-    FOREIGN KEY (id_user) REFERENCES users(id_user)
+    FOREIGN KEY (id_role) REFERENCES roles(id_rol) ON DELETE CASCADE,
+    FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE
 );
