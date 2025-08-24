@@ -198,8 +198,9 @@ class Model {
 
             if($this->con['conection']->error == ""){
                 if ($result) {
+                    $insertId = $this->con['conection']->insert_id;
                     
-                    return ['state'=>true,"message"=>"The record was inserted successfully"];
+                    return ['state'=>true,"message"=>"The record was inserted successfully",'id'=>$insertId];
                 } else {
                     return ['state'=>false,"message"=>"Error inserting record"];
                 }

@@ -16,6 +16,13 @@ $routes['/categoryEdit'] = ['GET', 'CategoryController@edit','Auth'];
 $routes['/categoryUpdate'] = ['POST', 'CategoryController@update','Auth'];
 $routes['/categoryDelete'] = ['GET', 'CategoryController@delete','Auth'];
 
+$routes['/allUsers'] = ['GET', 'UserController@index','Auth'];
+$routes['/userCreate'] = ['GET', 'UserController@create','Auth'];
+$routes['/userStore'] = ['POST', 'UserController@store','Auth'];
+$routes['/userEdit'] = ['GET', 'UserController@edit','Auth'];
+$routes['/userUpdate'] = ['POST', 'UserController@update','Auth'];
+$routes['/userDelete'] = ['GET', 'UserController@delete','Auth'];
+
 $routes['/register'] = ['GET', 'AuthController@register','Guest'];
 $routes['/registerStore'] = ['POST', 'AuthController@registerStore','Guest'];
 $routes['/login'] = ['GET', 'AuthController@login','Guest'];
